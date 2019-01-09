@@ -1,6 +1,9 @@
 import random
 import string
 
+memory = []
+cycle_counters = [0, 0]
+
 
 def introduce():
     return "Good morrow, noble squire. My name is Sir Bugsalot.\n" \
@@ -48,7 +51,35 @@ CASE_MAP = {'i': 'you', 'I': 'you', 'me': 'you', 'you': 'me',
 
 
 def find_response(the_input, wordlist, mapped_wordlist, questionmark):
-    if wordlist[0:3] == ["what", "is", "the", "word"] and questionmark:
-        return "Bababa Bird, Bird, Bird, Bird is the word!"
+    if wordlist[0:3] == ["what", "is", "the", "word"]:
+        response = "Bababa Bird, Bird, Bird, Bird is the word!"
+        return response
+
+    if wordlist[0] == '':
+        responses_to_silence = ["You don't seem to be very talkative.", "Don't be so shy!",
+                                "Is my noble presence intimidating you?", "I will soon lose my patience..."]
+        response = responses_to_silence[cycle_counters[0]]
+
+        cycle_counters[0] += 1
+        cycle_counters[0] %= len(responses_to_silence)
+        return response
+
+    if wordlist[0:1] == ["i", "am"]:
+        memory.append(wordlist)
+        if wordlist[2] == "sad":
+            return "Don't be sad, because sad backwards is 'das'. Und das ist nicht gut!"
+
+        if wordlist[2] == "happy" or wordlist[2] == "glad":
+            responses_to_happiness = ["It fills my heart with happiness to hear about your fortune.", "To be continued"]
+            return random.choice(responses_to_happiness)
+
+        else:
+            responses_to_i_am = ["Why are you " + ' '.join(mapped_wordlist[2:]) + ".", "Tell me more."]
+            response = responses_to_i_am[cycle_counters[1]]
+
+            cycle_counters[1] += 1
+            cycle_counters[1] %= len(responses_to_i_am)
+            return response
+
 
     return "Hello World!"
