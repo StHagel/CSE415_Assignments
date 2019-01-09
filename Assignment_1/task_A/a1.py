@@ -41,22 +41,25 @@ def mystery_code(plaintext):
 
 
 def past_tense(initial_list):
-    irregulars = ["have", "be", "eat", "go"]
+    irregulars = ["have", "has", "be", "am", "is", "are", "eat", "eats", "go", "goes"]
     vowels = ['a', 'e', 'i', 'o', 'u']
     final_list = []
     for verb in initial_list:
         verb = verb.lower()
         if verb in irregulars:
-            if verb == "have":
+            if verb == "have" or verb == "has":
                 past_verb = "had"
 
-            elif verb == "be":
+            elif verb == "be" or verb == "am" or verb == "is":
                 past_verb = "was"
 
-            elif verb == "eat":
+            elif verb == "are":
+                past_verb = "were"
+
+            elif verb == "eat" or verb == "eats":
                 past_verb = "ate"
 
-            elif verb == "go":
+            elif verb == "go" or verb == "goes":
                 past_verb = "went"
 
             else:
