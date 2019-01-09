@@ -51,8 +51,17 @@ CASE_MAP = {'i': 'you', 'I': 'you', 'me': 'you', 'you': 'me',
 
 
 def find_response(the_input, wordlist, mapped_wordlist, questionmark):
+    farewells = ["bye", "goodbye", "farewell", "ciao", "faretheewell", "godspeed"]
     if wordlist[0:3] == ["what", "is", "the", "word"]:
         response = "Bababa Bird, Bird, Bird, Bird is the word!"
+        return response
+
+    if wordlist == ["i", "love", "you"]:
+        response = "I like you too, but I think we should stay friends."
+        return response
+
+    if wordlist[0] in farewells:
+        response = "Fare-thee-well!"
         return response
 
     if wordlist[0] == '':
@@ -80,6 +89,5 @@ def find_response(the_input, wordlist, mapped_wordlist, questionmark):
             cycle_counters[1] += 1
             cycle_counters[1] %= len(responses_to_i_am)
             return response
-
 
     return "Hello World!"
