@@ -4,15 +4,13 @@ def five_x_cubed_plus_1(x):
 
 def pair_off(initial_list):
     final_list = []
-    index = 0
-    while index < len(initial_list):
+    for index in range(0, len(initial_list), 2):
         if (index + 1) < len(initial_list):
             new_pair = [initial_list[index], initial_list[index + 1]]
         else:
             new_pair = [initial_list[index]]
 
         final_list.append(new_pair)
-        index += 2
 
     return final_list
 
