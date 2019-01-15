@@ -1,0 +1,48 @@
+0A: Sir Bugsalot: Good morrow, noble squire. My name is Sir Bugsalot.
+I was brought down onto this world by Stephan Hagel.
+If ye are to bring your word to him, ye shall deliver message to sthagel@uw.edu.
+What is your desire?
+
+0B: Potse: Hello there! I am PotseI am named so because I reply Potse (quickly). Programmed by Palash UWNetID-palashrcI will try my best to make you believe that I am a humanHow can I help you today?
+
+1A: Sir Bugsalot: What would you like to talk about today?
+
+1B: Potse: You would know
+
+2A: Sir Bugsalot: How do you feel today?
+
+2B: Potse: What do you think about how.
+
+3A: Sir Bugsalot: I don't know what. I only know how to use my sword!
+
+3B: Potse: You don't know what you only know how to use your sword.
+
+4A: Sir Bugsalot: A tale is but half told when only one person tells it.
+
+4B: Potse: I do not have access to internet, so I cannot find that out
+
+AFTER THIS LINE THE BOTS START LOOPING, SO WE ONLY DID TEN LINES
+
+5A: Sir Bugsalot: you do not have access to internet so you cannot find that out, if I remember correctly. Tell me more about it!
+
+5B: Potse: Me do not have access to internet so me cannot find that out if you remember correctly Tell you more about it.
+
+6A: Sir Bugsalot: you do not have access to internet so you cannot find that out, if I remember correctly. Tell me more about it!
+
+6B: Potse: Me do not have access to internet so me cannot find that out if you remember correctly Tell you more about it.
+
+7A: Sir Bugsalot: you do not have access to internet so you cannot find that out, if I remember correctly. Tell me more about it!
+
+7B: Potse: Me do not have access to internet so me cannot find that out if you remember correctly Tell you more about it.
+
+8A: Sir Bugsalot: you do not have access to internet so you cannot find that out, if I remember correctly. Tell me more about it!
+
+8B: Potse: Me do not have access to internet so me cannot find that out if you remember correctly Tell you more about it.
+
+9A: Sir Bugsalot: you do not have access to internet so you cannot find that out, if I remember correctly. Tell me more about it!
+
+9B: Potse: Me do not have access to internet so me cannot find that out if you remember correctly Tell you more about it.
+
+10A: Sir Bugsalot: you do not have access to internet so you cannot find that out, if I remember correctly. Tell me more about it!
+
+10B: Potse: Me do not have access to internet so me cannot find that out if you remember correctly Tell you more about it.
