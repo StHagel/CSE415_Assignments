@@ -86,13 +86,13 @@ def find_response(wordlist, mapped_wordlist):
         cycle_counters[0] %= len(responses_to_silence)
         return response
 
-    # TODO: continue responses to happiness
     # This checks for inputs starting with "I am". If the input starts with "I am happy" or "I am glad", a random
     # response out of N different ones is chosen, for any other input starting with "I am", the response cycles through
     # two different possible responses
-    if wordlist[0:2] == ["i", "am"]:
-        if wordlist[2] == "happy" or wordlist[2] == "glad":
-            responses_to_happiness = ["It fills my heart with happiness to hear about your fortune.", "To be continued"]
+    if wordlist[0:2] == ["i", "am"] or wordlist[0] == "im":
+        if wordlist[2] in ["happy", "glad"] or wordlist[1] in ["happy", "glad"]:
+            responses_to_happiness = ["It fills my heart with happiness to hear about your fortune.",
+                                      "I am happy to hear that.", "This is some good news."]
             response = random.choice(responses_to_happiness)
             return response
 

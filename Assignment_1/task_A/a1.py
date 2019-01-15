@@ -61,7 +61,7 @@ def past_tense(initial_list):
                 past_verb = "went"
 
             else:
-                raise ValueError('Unknown irregular verb given to past_tense function.')
+                raise ValueError("Unknown irregular verb given to past_tense function.")
 
         elif verb[-1] == 'e':
             past_verb = verb + 'd'
