@@ -18,9 +18,9 @@ def agentName():
 
 def respond(the_input):
     exclude = set(string.punctuation)
-    input_wo_punctuation = "".join(ch for ch in the_input if ch not in exclude)
+    input_wo_punctuation = ''.join(ch for ch in the_input if ch not in exclude)
 
-    wordlist = input_wo_punctuation.split(" ")
+    wordlist = input_wo_punctuation.split(' ')
     wordlist[0] = wordlist[0].lower()
 
     mapped_wordlist = you_me_map(wordlist)
@@ -53,9 +53,10 @@ def find_response(wordlist, mapped_wordlist):
     default_sentences = ["How are you?", "How do you feel today?", "What would you like to talk about today?",
                          "Call your desire!", "How do you like my sword?",
                          "A tale is but half told when only one person tells it."]
-    memory_verbs = ["do", "feel", "am", "have", "love", "hate", "like", "know", "wish"]
+    memory_verbs = ["do", "feel", "am", "have", "love", "hate", "like", "know", "wish", "think"]
     verbs = ["do", "are", "am", "have", "go", "try", "eat", "take", "help", "make", "get", "jump", "walk", "write",
-             "read", "put", "swing", "think", "drink", "ride", "add", "can", "could"]
+             "read", "put", "swing", "think", "drink", "ride", "add", "can", "could", "use", "run", "cook", "open",
+             "look", "think", "see", "know"]
 
     # The first if statement checks, if the input is of some form, that can easily be stored in the bots memory
     if (wordlist[0] == "i" and (wordlist[1] in memory_verbs or wordlist[1:3] == ["dont", "know"])) or \
@@ -97,7 +98,7 @@ def find_response(wordlist, mapped_wordlist):
             return response
 
         else:
-            responses_to_i_am = ["Why are you " + " ".join(mapped_wordlist[2:]) + "?", "Tell me more."]
+            responses_to_i_am = ["Why are you " + ' '.join(mapped_wordlist[2:]) + "?", "Tell me more."]
             response = responses_to_i_am[cycle_counters[1]]
 
             cycle_counters[1] += 1
@@ -118,15 +119,15 @@ def find_response(wordlist, mapped_wordlist):
 
     # If the input starts with "I feel" or "I felt", the next rule chooses one of two responses randomly
     if wordlist[0:2] == ["i", "feel"] or wordlist[0:2] == ["i", "felt"]:
-        responses_to_i_feel = ["I know that feeling.", "Why do you feel " + " ".join(mapped_wordlist[2:]) + "?"]
+        responses_to_i_feel = ["I know that feeling.", "Why do you feel " + ' '.join(mapped_wordlist[2:]) + "?"]
         response = random.choice(responses_to_i_feel)
         return response
 
     # The next rule uses the cycle feature to choose a response to sentences starting with "I have" or "I had"
     if wordlist[0:2] == ["i", "have"] or wordlist[0:2] == ["i", "had"]:
-        responses_to_i_have = ["How long have you had " + " ".join(mapped_wordlist[2:]) + "?", "I have " +
-                               " ".join(wordlist[2:]) + " as well.", "I wish I also had " +
-                               " ".join(mapped_wordlist[2:])]
+        responses_to_i_have = ["How long have you had " + ' '.join(mapped_wordlist[2:]) + "?", "I have " +
+                               ' '.join(wordlist[2:]) + " as well.", "I wish I also had " +
+                               ' '.join(mapped_wordlist[2:])]
 
         response = responses_to_i_have[cycle_counters[2]]
 
@@ -141,13 +142,13 @@ def find_response(wordlist, mapped_wordlist):
 
     # This rule just gives the bot more responses and makes it less likely to hit the default sentences
     if wordlist[0] == "its" or wordlist[0:2] == ["it", "is"]:
-        response = "Do you really think " + " ".join(mapped_wordlist) + "?"
+        response = "Do you really think " + ' '.join(mapped_wordlist) + "?"
         return response
 
     # Checks for questions starting with "Can/Could you" and gives a random answer.
     if wordlist[0:2] == ["can", "you"] or wordlist[0:2] == ["could", "you"]:
         responses_to_can_you = ["A noble knight like me can do everything!",
-                                "Surely I " + wordlist[0] + " ".join(mapped_wordlist[2:]) + ".",
+                                "Surely I " + wordlist[0] + ' '.join(mapped_wordlist[2:]) + ".",
                                 "Why do you want to know that?"]
         response = random.choice(responses_to_can_you)
         return response
@@ -160,12 +161,12 @@ def find_response(wordlist, mapped_wordlist):
     # A generalization of the previous rule. This rule checks for questions of the form "verb I/you ...?", for example
     # "Do I/do you ...?". The response is again chosen by the cycle feature.
     if (wordlist[1].lower() == "i" or wordlist[1] == "you") and wordlist[0] in verbs:
-        responses_to_verb_i = ["Of course " + mapped_wordlist[1] + " " + mapped_wordlist[0] + " " +
-                               " ".join(mapped_wordlist[2:]),
+        responses_to_verb_i = ["Of course " + mapped_wordlist[1] + ' ' + mapped_wordlist[0] + ' ' +
+                               ' '.join(mapped_wordlist[2:]),
                                "I am very positive, that " + mapped_wordlist[1] + mapped_wordlist[0] +
-                               " ".join(mapped_wordlist[2:]),
+                               ' '.join(mapped_wordlist[2:]),
                                "I am not sure, if " + mapped_wordlist[1] + mapped_wordlist[0] +
-                               " ".join(mapped_wordlist[2:]), "This is maybe the case."]
+                               ' '.join(mapped_wordlist[2:]), "This is maybe the case."]
         response = responses_to_verb_i[cycle_counters[4]]
 
         cycle_counters[4] += 1
@@ -175,16 +176,22 @@ def find_response(wordlist, mapped_wordlist):
 
     # This rule checks for inputs starting with "I like/love". The response is chosen randomly
     if wordlist[0:2] == ["i", "like"] or wordlist[0:2] == ["i", "love"]:
-        responses_to_love = ["I " + " ".join(mapped_wordlist[2:]) + " as well.",
-                             "Why do you " + " ".join(mapped_wordlist[2:]) + "?",
+        responses_to_love = ["I " + ' '.join(mapped_wordlist[1:]) + " as well.",
+                             "Why do you " + ' '.join(mapped_wordlist[1:]) + "?",
                              "I am glad, that you have something that makes you happy."]
         response = random.choice(responses_to_love)
         return response
 
     # Checks for inputs of the form "You verb ...". The response is chosen randomly.
     if wordlist[0] == "you" and wordlist[1] in verbs:
-        responses_to_you_are = ["You know me well!", "Yes indeed, I " + " ".join(mapped_wordlist[1:])]
+        responses_to_you_are = ["You know me well!", "Yes indeed, I " + ' '.join(mapped_wordlist[1:])]
         response = random.choice(responses_to_you_are)
+        return response
+
+    if wordlist[0:2] == ["is", "that"] or wordlist[0:2] == ["is", "this"]:
+        responses_to_is_that = ["I am positive, that " + wordlist[1] + wordlist[0] + ' '.join(mapped_wordlist[2:]),
+                                "I think so.", "I am not sure about this.", "Only the heavens may know."]
+        response = random.choice(responses_to_is_that)
         return response
 
     # This rule just checks for some keywords and gives one of two random responses.
@@ -233,7 +240,7 @@ def find_response(wordlist, mapped_wordlist):
     # If the bot has no rule to for a response to the last input, it takes something out of its memory and refers back
     # to it.
     if len(memory) > 0:
-        response = " ".join(you_me_map(random.choice(memory))) + ", if I remember correctly. Tell me more about it!"
+        response = ' '.join(you_me_map(random.choice(memory))) + ", if I remember correctly. Tell me more about it!"
         return response
 
     # If no rule was triggered and the bot has nothing stored in its memory yet, it randomly chooses one of the default
