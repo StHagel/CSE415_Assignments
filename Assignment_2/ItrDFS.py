@@ -13,9 +13,9 @@ Iterative Depth-First Search of a problem space.
 
 import sys
 
-if sys.argv==[''] or len(sys.argv)<2:
+if sys.argv == [''] or len(sys.argv) < 2:
     #  import EightPuzzle as Problem
-    import TowersOfHanoi as Problem
+    import sthagel_Farmer_Fox as Problem
 else:
     import importlib
     Problem = importlib.import_module(sys.argv[1])
@@ -23,6 +23,7 @@ else:
 print("\nWelcome to ItrDFS")
 COUNT = None
 BACKLINKS = {}
+
 
 def runDFS():
     initial_state = Problem.CREATE_INITIAL_STATE()
@@ -36,6 +37,7 @@ def runDFS():
     print(str(COUNT)+" states expanded.")
     print('MAX_OPEN_LENGTH = '+str(MAX_OPEN_LENGTH))
 
+
 def IterativeDFS(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
 
@@ -47,7 +49,8 @@ def IterativeDFS(initial_state):
     # STEP 2. If OPEN is empty, output “DONE” and stop.
     while OPEN != []:
         report(OPEN, CLOSED, COUNT)
-        if len(OPEN)>MAX_OPEN_LENGTH: MAX_OPEN_LENGTH = len(OPEN)
+        if len(OPEN) > MAX_OPEN_LENGTH:
+            MAX_OPEN_LENGTH = len(OPEN)
 
         # STEP 3. Select the first state on OPEN and call it S.
         #         Delete S from OPEN.
@@ -77,18 +80,21 @@ def IterativeDFS(initial_state):
         #         Insert all members of L at the front of OPEN.
         for s2 in L:
             for i in range(len(OPEN)):
-                if (s2 == OPEN[i]):
-                    del OPEN[i]; break
+                if s2 == OPEN[i]:
+                    del OPEN[i]
+                    break
 
         OPEN = L + OPEN
         print_state_list("OPEN", OPEN)
 # STEP 6. Go to Step 2.
 
+
 def print_state_list(name, lst):
-    print(name+" is now: ",end='')
+    print(name+" is now: ", end='')
     for s in lst[:-1]:
-        print(str(s),end=', ')
+        print(str(s), end=', ')
     print(str(lst[-1]))
+
 
 def backtrace(S):
     global BACKLINKS
@@ -102,11 +108,12 @@ def backtrace(S):
         print(s)
     return path
 
+
 def report(open, closed, count):
-    print("len(OPEN)="+str(len(open)), end='; ')
-    print("len(CLOSED)="+str(len(closed)), end='; ')
-    print("COUNT = "+str(count))
+    print("len(OPEN)=" + str(len(open)), end='; ')
+    print("len(CLOSED)=" + str(len(closed)), end='; ')
+    print("COUNT = " + str(count))
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     runDFS()
-

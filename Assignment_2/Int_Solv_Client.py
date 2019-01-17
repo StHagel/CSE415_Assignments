@@ -154,9 +154,9 @@ except Exception as e:
   print(e)
   exit(1)
 
-OPERATORS=PROBLEM.OPERATORS
+OPERATORS = PROBLEM.OPERATORS
 STATE_STACK = []
-TITLE="Int_Solv_Client (Version 1)"
+TITLE = "Int_Solv_Client (Version 1)"
       
 # The following is only executed if this module is being run as the main
 # program, rather than imported from another one.
