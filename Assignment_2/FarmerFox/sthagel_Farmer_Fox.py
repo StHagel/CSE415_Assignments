@@ -33,6 +33,11 @@ class State:
             for entity in self.d[bank]:
                 if entity not in s2.d[bank]:
                     return False
+
+            for entity in s2.d[bank]:
+                if entity not in self.d[bank]:
+                    return False
+
         return True
 
     def __str__(self):
