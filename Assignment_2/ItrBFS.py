@@ -7,7 +7,6 @@ This file contains my implementation of the iterative Breadth-First-Search algor
 The code is mainly based on the ItrDFS.py provided by S. Tanimoto and has only been changed to perform the BFS.
 '''
 
-# TODO: Basically everything, change from DFS to BFS
 
 import sys
 
@@ -40,51 +39,51 @@ def IterativeDFS(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
 
     # STEP 1. Put the start state on a list OPEN
-    OPEN = [initial_state]
-    CLOSED = []
+    _open = [initial_state]
+    _closed = []
     BACKLINKS[initial_state] = None
 
     # STEP 2. If OPEN is empty, output “DONE” and stop.
-    while OPEN != []:
-        report(OPEN, CLOSED, COUNT)
-        if len(OPEN) > MAX_OPEN_LENGTH:
-            MAX_OPEN_LENGTH = len(OPEN)
+    while _open:
+        report(_open, _closed, COUNT)
+        if len(_open) > MAX_OPEN_LENGTH:
+            MAX_OPEN_LENGTH = len(_open)
 
         # STEP 3. Select the first state on OPEN and call it S.
         #         Delete S from OPEN.
         #         Put S on CLOSED.
         #         If S is a goal state, output its description
-        S = OPEN.pop(0)
-        CLOSED.append(S)
+        s = _open.pop(0)
+        _closed.append(s)
 
-        if Problem.GOAL_TEST(S):
-            print(Problem.GOAL_MESSAGE_FUNCTION(S))
-            path = backtrace(S)
+        if Problem.GOAL_TEST(s):
+            print(Problem.GOAL_MESSAGE_FUNCTION(s))
+            path = backtrace(s)
             print('Length of solution path found: '+str(len(path)-1)+' edges')
             return
         COUNT += 1
 
         # STEP 4. Generate the list L of successors of S and delete
         #         from L those states already appearing on CLOSED.
-        L = []
+        _l = []
         for op in Problem.OPERATORS:
-            if op.precond(S):
-                new_state = op.state_transf(S)
-                if not (new_state in CLOSED):
-                    L.append(new_state)
-                    BACKLINKS[new_state] = S
+            if op.precond(s):
+                new_state = op.state_transf(s)
+                if not (new_state in _closed):
+                    _l.append(new_state)
+                    BACKLINKS[new_state] = s
 
-        # STEP 5. Delete from OPEN any members of OPEN that occur on L.
-        #         Insert all members of L at the front of OPEN.
-        for s2 in L:
-            for i in range(len(OPEN)):
-                if s2 == OPEN[i]:
-                    del OPEN[i]
+        # Delete from L any members of OPEN that occur on L.
+        # Insert all members of L at the end of OPEN.
+        for s2 in _open:
+            for i in range(len(_l)):
+                if s2 == _l[i]:
+                    del _l[i]
                     break
 
-        OPEN = L + OPEN
-        print_state_list("OPEN", OPEN)
-# STEP 6. Go to Step 2.
+        _open = _open + _l
+        print_state_list("OPEN", _open)
+    # STEP 6. Go to Step 2.
 
 
 def print_state_list(name, lst):
@@ -94,21 +93,21 @@ def print_state_list(name, lst):
     print(str(lst[-1]))
 
 
-def backtrace(S):
+def backtrace(s):
     global BACKLINKS
     path = []
-    while S:
-        path.append(S)
-        S = BACKLINKS[S]
+    while s:
+        path.append(s)
+        s = BACKLINKS[s]
     path.reverse()
     print("Solution path: ")
-    for s in path:
-        print(s)
+    for s2 in path:
+        print(s2)
     return path
 
 
-def report(open, closed, count):
-    print("len(OPEN)=" + str(len(open)), end='; ')
+def report(_open, closed, count):
+    print("len(OPEN)=" + str(len(_open)), end='; ')
     print("len(CLOSED)=" + str(len(closed)), end='; ')
     print("COUNT = " + str(count))
 
