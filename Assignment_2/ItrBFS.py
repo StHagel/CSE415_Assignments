@@ -39,22 +39,22 @@ def IterativeDFS(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
 
     # STEP 1. Put the start state on a list OPEN
-    _open = [initial_state]
-    _closed = []
+    open_ = [initial_state]
+    closed_ = []
     BACKLINKS[initial_state] = None
 
     # STEP 2. If OPEN is empty, output “DONE” and stop.
-    while _open:
-        report(_open, _closed, COUNT)
-        if len(_open) > MAX_OPEN_LENGTH:
-            MAX_OPEN_LENGTH = len(_open)
+    while open_:
+        report(open_, closed_, COUNT)
+        if len(open_) > MAX_OPEN_LENGTH:
+            MAX_OPEN_LENGTH = len(open_)
 
         # STEP 3. Select the first state on OPEN and call it S.
         #         Delete S from OPEN.
         #         Put S on CLOSED.
         #         If S is a goal state, output its description
-        s = _open.pop(0)
-        _closed.append(s)
+        s = open_.pop(0)
+        closed_.append(s)
 
         if Problem.GOAL_TEST(s):
             print(Problem.GOAL_MESSAGE_FUNCTION(s))
@@ -65,28 +65,28 @@ def IterativeDFS(initial_state):
 
         # STEP 4. Generate the list L of successors of S and delete
         #         from L those states already appearing on CLOSED.
-        _l = []
+        l_ = []
         for op in Problem.OPERATORS:
             if op.precond(s):
                 new_state = op.state_transf(s)
-                if not (new_state in _closed):
-                    _l.append(new_state)
+                if not (new_state in closed_):
+                    l_.append(new_state)
                     BACKLINKS[new_state] = s
 
         # Delete from L any members of OPEN that occur on L.
         # Insert all members of L at the end of OPEN.
-        for s2 in _open:
-            for i in range(len(_l)):
-                if s2 == _l[i]:
-                    del _l[i]
+        for s2 in open_:
+            for i in range(len(l_)):
+                if s2 == l_[i]:
+                    del l_[i]
                     break
 
-        _open = _open + _l
-        print_state_list("OPEN", _open)
+        open_ = open_ + l_
+        print_statel_ist("OPEN", open_)
     # STEP 6. Go to Step 2.
 
 
-def print_state_list(name, lst):
+def print_statel_ist(name, lst):
     print(name+" is now: ", end='')
     for s in lst[:-1]:
         print(str(s), end=', ')
@@ -106,8 +106,8 @@ def backtrace(s):
     return path
 
 
-def report(_open, closed, count):
-    print("len(OPEN)=" + str(len(_open)), end='; ')
+def report(open_, closed, count):
+    print("len(OPEN)=" + str(len(open_)), end='; ')
     print("len(CLOSED)=" + str(len(closed)), end='; ')
     print("COUNT = " + str(count))
 

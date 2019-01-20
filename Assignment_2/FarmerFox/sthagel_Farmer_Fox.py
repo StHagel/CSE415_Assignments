@@ -60,16 +60,14 @@ class State:
         return news
 
     def can_move(self, passenger):
-        # Test, if it is legal, to bring the farmer and the passenger from the _from bank to the _to bank.
+        # Test, if it is legal, to bring the farmer and the passenger from the from_ bank to the to_ bank.
         try:
             if 'F' in self.d['left']:
-                _from = 'left'
-                _to = 'right'
+                from_ = 'left'
             else:
-                _from = 'right'
-                _to = 'left'
+                from_ = 'right'
 
-            from_bank = self.d[_from]  # The bank that the boat leaves from
+            from_bank = self.d[from_]  # The bank that the boat leaves from
 
             if passenger != '' and passenger not in from_bank:
                 return False  # The passenger is not at the "from" bank
@@ -102,23 +100,23 @@ class State:
         news = self.copy()  # start with a deep copy.
 
         if 'F' in self.d['left']:
-            _from = 'left'
-            _to = 'right'
+            from_ = 'left'
+            to_ = 'right'
         else:
-            _from = 'right'
-            _to = 'left'
+            from_ = 'right'
+            to_ = 'left'
 
         if passenger != '':
-            news.d[_to] = self.d[_to] + ['F', passenger]  # The farmer and passenger cross the river
+            news.d[to_] = self.d[to_] + ['F', passenger]  # The farmer and passenger cross the river
         else:
-            news.d[_to] = self.d[_to] + ['F']  # Only the farmer crosses the river
+            news.d[to_] = self.d[to_] + ['F']  # Only the farmer crosses the river
 
         temp_list = []  # This list will contain the entities left behind
-        for entity in self.d[_from]:
+        for entity in self.d[from_]:
             if entity != 'F' and entity != passenger:
                 temp_list.append(entity)
 
-        news.d[_from] = temp_list
+        news.d[from_] = temp_list
 
         return news  # return new state
 
