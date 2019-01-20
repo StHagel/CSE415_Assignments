@@ -1,4 +1,4 @@
-'''ItrBFS.py
+'''IDDFS.py
 by Stephan Hagel
 
 Assignment 2, in CSE 415, Winter 2019.
@@ -7,6 +7,7 @@ This file contains my implementation of the iterative Breadth-First-Search algor
 The code is mainly based on the ItrDFS.py provided by S. Tanimoto and has only been changed to perform the BFS.
 '''
 
+# TODO: Implement iterative deepening
 
 import sys
 
@@ -75,13 +76,13 @@ def IterativeDFS(initial_state):
 
         # Delete from L any members of OPEN that occur on L.
         # Insert all members of L at the end of OPEN.
-        for s2 in open_:
-            for i in range(len(l_)):
-                if s2 == l_[i]:
-                    del l_[i]
+        for s2 in l_:
+            for i in range(len(open_)):
+                if s2 == open_[i]:
+                    del open_[i]
                     break
 
-        open_ = open_ + l_
+        open_ = l_ + open_
         print_statel_ist("OPEN", open_)
     # STEP 6. Go to Step 2.
 
