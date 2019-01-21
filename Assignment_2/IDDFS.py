@@ -7,7 +7,7 @@ This file contains my implementation of the iterative Breadth-First-Search algor
 The code is mainly based on the ItrDFS.py provided by S. Tanimoto and has only been changed to perform the BFS.
 '''
 
-# TODO: Implement iterative deepening
+# TODO: Handle the case, when no goal can be found.
 
 import sys
 
@@ -18,7 +18,7 @@ else:
     import importlib
     Problem = importlib.import_module(sys.argv[1])
 
-print("\nWelcome to ItrBFS")
+print("\nWelcome to IDDFS")
 COUNT = None
 BACKLINKS = {}
 
@@ -38,53 +38,61 @@ def runDFS():
 
 def IterativeDFS(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
+    depth = 0
+    flag = False
 
-    # STEP 1. Put the start state on a list OPEN
-    open_ = [initial_state]
-    closed_ = []
-    BACKLINKS[initial_state] = None
+    while not flag:
+        # STEP 1. Put the start state on a list OPEN
+        COUNT = 0
+        open_ = [initial_state]
+        closed_ = []
+        BACKLINKS[initial_state] = None
 
-    # STEP 2. If OPEN is empty, output “DONE” and stop.
-    while open_:
-        report(open_, closed_, COUNT)
-        if len(open_) > MAX_OPEN_LENGTH:
-            MAX_OPEN_LENGTH = len(open_)
+        # STEP 2. If OPEN is empty, output “DONE” and stop.
 
-        # STEP 3. Select the first state on OPEN and call it S.
-        #         Delete S from OPEN.
-        #         Put S on CLOSED.
-        #         If S is a goal state, output its description
-        s = open_.pop(0)
-        closed_.append(s)
+        while open_ and COUNT <= depth:
+            report(open_, closed_, COUNT)
+            if len(open_) > MAX_OPEN_LENGTH:
+                MAX_OPEN_LENGTH = len(open_)
 
-        if Problem.GOAL_TEST(s):
-            print(Problem.GOAL_MESSAGE_FUNCTION(s))
-            path = backtrace(s)
-            print('Length of solution path found: '+str(len(path)-1)+' edges')
-            return
-        COUNT += 1
+            # STEP 3. Select the first state on OPEN and call it S.
+            #         Delete S from OPEN.
+            #         Put S on CLOSED.
+            #         If S is a goal state, output its description
+            s = open_.pop(0)
+            closed_.append(s)
 
-        # STEP 4. Generate the list L of successors of S and delete
-        #         from L those states already appearing on CLOSED.
-        l_ = []
-        for op in Problem.OPERATORS:
-            if op.precond(s):
-                new_state = op.state_transf(s)
-                if not (new_state in closed_):
-                    l_.append(new_state)
-                    BACKLINKS[new_state] = s
+            if Problem.GOAL_TEST(s):
+                print(Problem.GOAL_MESSAGE_FUNCTION(s))
+                path = backtrace(s)
+                print('Length of solution path found: '+str(len(path)-1)+' edges')
+                flag = True
+                return
+            COUNT += 1
 
-        # Delete from L any members of OPEN that occur on L.
-        # Insert all members of L at the end of OPEN.
-        for s2 in l_:
-            for i in range(len(open_)):
-                if s2 == open_[i]:
-                    del open_[i]
-                    break
+            # STEP 4. Generate the list L of successors of S and delete
+            #         from L those states already appearing on CLOSED.
+            l_ = []
+            for op in Problem.OPERATORS:
+                if op.precond(s):
+                    new_state = op.state_transf(s)
+                    if not (new_state in closed_):
+                        l_.append(new_state)
+                        BACKLINKS[new_state] = s
 
-        open_ = l_ + open_
-        print_statel_ist("OPEN", open_)
-    # STEP 6. Go to Step 2.
+            # Delete from L any members of OPEN that occur on L.
+            # Insert all members of L at the end of OPEN.
+            for s2 in l_:
+                for i in range(len(open_)):
+                    if s2 == open_[i]:
+                        del open_[i]
+                        break
+
+            open_ = l_ + open_
+            print_statel_ist("OPEN", open_)
+
+        depth += 1
+        # STEP 6. Go to Step 2.
 
 
 def print_statel_ist(name, lst):

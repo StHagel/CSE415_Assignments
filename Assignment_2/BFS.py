@@ -17,7 +17,7 @@ else:
     import importlib
     Problem = importlib.import_module(sys.argv[1])
 
-print("\nWelcome to ItrBFS")
+print("\nWelcome to BFS")
 COUNT = None
 BACKLINKS = {}
 
