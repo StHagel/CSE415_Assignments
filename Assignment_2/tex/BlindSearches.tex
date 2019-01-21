@@ -1,0 +1,54 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb, latexsym, amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, float, subcaption}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{slashed}
+\usepackage{mathrsfs}
+\usepackage{dsfont}
+
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,automata,backgrounds,calc,er,patterns}
+
+\bibliographystyle{unsrt}
+
+\title{\textbf{Homework assignment 2}}
+\author{Stephan Hagel\\sthagel@uw.edu}
+
+
+\renewcommand{\phi}{\varphi}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\mathbb}{\mathds}
+
+\newcommand{\unity}{\mathds{1}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\levi}{\varepsilon_{ijk}}
+\newcommand{\leviup}{\varepsilon^{ijk}}
+\newcommand{\vectz}[2]{\begin{pmatrix}	#1\\	#2		   \end{pmatrix}}
+\newcommand{\vectd}[3]{\begin{pmatrix}	#1\\	#2\\    #3 \end{pmatrix}}
+\newcommand{\condensate}{\left\langle\overline{Q}Q\right\rangle}
+\newcommand{\To}{\longrightarrow}
+\newcommand{\os}{operating system }
+\newcommand{\oss}{operating systems }
+\newcommand{\Os}{Operating system }
+
+\newtheorem{env_definition}{Definition}[section]
+\newtheorem{env_satz}{Satz}
+
+\begin{document}
+
+\maketitle
+
+\input{mis_can.tex}
+
+\input{ffcg.tex}
+
+\input{hanoi.tex}
+
+
+\end{document}

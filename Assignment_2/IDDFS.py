@@ -7,6 +7,7 @@ This file contains my implementation of the iterative Breadth-First-Search algor
 The code is mainly based on the ItrDFS.py provided by S. Tanimoto and has only been changed to perform the BFS.
 '''
 
+# TODO: just found out, that it does not work properly, need to fix that.
 
 import sys
 
