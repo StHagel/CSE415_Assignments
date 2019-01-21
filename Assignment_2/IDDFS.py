@@ -7,7 +7,6 @@ This file contains my implementation of the iterative Breadth-First-Search algor
 The code is mainly based on the ItrDFS.py provided by S. Tanimoto and has only been changed to perform the BFS.
 '''
 
-# TODO: Handle the case, when no goal can be found.
 
 import sys
 
@@ -40,8 +39,10 @@ def IterativeDFS(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
     depth = 0
     flag = False
+    impossible = False
 
-    while not flag:
+    while not flag and not impossible:
+        print("\nDepth = " + str(depth) + "\n")
         # STEP 1. Put the start state on a list OPEN
         COUNT = 0
         open_ = [initial_state]
@@ -91,8 +92,14 @@ def IterativeDFS(initial_state):
             open_ = l_ + open_
             print_statel_ist("OPEN", open_)
 
+            if not open_:
+                impossible = True
+
         depth += 1
         # STEP 6. Go to Step 2.
+
+    if impossible:
+        print("No solution could be found!")
 
 
 def print_statel_ist(name, lst):
