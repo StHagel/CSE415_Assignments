@@ -7,7 +7,6 @@ This file contains my implementation of the iterative Breadth-First-Search algor
 The code is mainly based on the ItrDFS.py provided by S. Tanimoto and has only been changed to perform the BFS.
 '''
 
-# TODO: just found out, that it does not work properly, need to fix that.
 
 import sys
 
@@ -31,76 +30,74 @@ def runDFS():
     COUNT = 0
     BACKLINKS = {}
     MAX_OPEN_LENGTH = 0
-    IterativeDFS(initial_state)
-    print(str(COUNT)+" states expanded.")
-    print('MAX_OPEN_LENGTH = '+str(MAX_OPEN_LENGTH))
+    iterative_deepening_dfs(initial_state)
+    print(str(COUNT) + " states expanded.")
+    print('MAX_OPEN_LENGTH = ' + str(MAX_OPEN_LENGTH))
 
 
-def IterativeDFS(initial_state):
+def iterative_deepening_dfs(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
-    depth = 0
-    flag = False
-    impossible = False
+    depthlimit = 0
 
-    while not flag and not impossible:
-        print("\nDepth = " + str(depth) + "\n")
-        # STEP 1. Put the start state on a list OPEN
+    while True:
+        # To implement the iterative deepening we loop around the DFS until we hit the goal.
+        print("\nCurrent depthlimit = " + str(depthlimit) + "\n")
         COUNT = 0
+        current_depth = 0
         open_ = [initial_state]
         closed_ = []
         BACKLINKS[initial_state] = None
+        visited = {}
+        visited[initial_state.__hash__()] = current_depth
+        # For this to work we need to track, which states have already been visited. This is realized with a dictionary,
+        # which maps the hash of a state to its depth inside the graph.
 
-        # STEP 2. If OPEN is empty, output “DONE” and stop.
-
-        while open_ and COUNT <= depth:
+        while open_:
             report(open_, closed_, COUNT)
             if len(open_) > MAX_OPEN_LENGTH:
                 MAX_OPEN_LENGTH = len(open_)
 
-            # STEP 3. Select the first state on OPEN and call it S.
-            #         Delete S from OPEN.
-            #         Put S on CLOSED.
-            #         If S is a goal state, output its description
-            s = open_.pop(0)
+            s = open_.pop()
+            # As I was working on this task, it turned out to be inconveniant to stick with the approach used in the
+            # example DFS formulation. Therefore I changed a few things from it. For example I pop the state from the
+            # other end of open_ and therefore also append the states on the other side.
+
+            current_depth = visited[s.__hash__()]
+            # We need the depth of the state we just popped later to get the depth of the states coming after it.
+
             closed_.append(s)
 
             if Problem.GOAL_TEST(s):
                 print(Problem.GOAL_MESSAGE_FUNCTION(s))
                 path = backtrace(s)
-                print('Length of solution path found: '+str(len(path)-1)+' edges')
-                flag = True
+                print('Length of solution path found: ' + str(len(path) - 1) + ' edges')
                 return
             COUNT += 1
 
-            # STEP 4. Generate the list L of successors of S and delete
-            #         from L those states already appearing on CLOSED.
-            l_ = []
-            for op in Problem.OPERATORS:
-                if op.precond(s):
-                    new_state = op.state_transf(s)
-                    if not (new_state in closed_):
-                        l_.append(new_state)
-                        BACKLINKS[new_state] = s
+            if current_depth < depthlimit:
+                # This if statement is part of the logic that implements the iterative deepening.
+                current_depth += 1
+                # Now we can safely increase the current_depth, to give the new states the correct depth.
+                for op in Problem.OPERATORS:
+                    if op.precond(s):
+                        new_state = op.state_transf(s)
+                        # The list of possible states is generated just as in the example DFS implementation.
 
-            # Delete from L any members of OPEN that occur on L.
-            # Insert all members of L at the end of OPEN.
-            for s2 in l_:
-                for i in range(len(open_)):
-                    if s2 == open_[i]:
-                        del open_[i]
-                        break
+                        if new_state.__hash__() not in visited or visited[new_state.__hash__()] > current_depth:
+                            # This part is different though. Instead of checking, weather the new state appears in
+                            # open_ or closed, we check if the hash of the new state already appears in the visited
+                            # dictionary. We also replace the state, if it already appears but it has been reached
+                            # via a longer path before.
 
-            open_ = l_ + open_
-            print_statel_ist("OPEN", open_)
+                            open_.append(new_state)
+                            visited[new_state.__hash__()] = current_depth
+                            # As stated earlier, popping from the other end of open_ allows us to use the append()
+                            # function for new states. We also add the depth of the new state to the dictionary.
 
-            if not open_:
-                impossible = True
+                            BACKLINKS[new_state] = s
 
-        depth += 1
-        # STEP 6. Go to Step 2.
-
-    if impossible:
-        print("No solution could be found!")
+        depthlimit += 1
+        # If the search does not find a path to the goal state, we increase the depthlimit and run it again.
 
 
 def print_statel_ist(name, lst):

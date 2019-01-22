@@ -30,30 +30,32 @@ def runDFS():
     COUNT = 0
     BACKLINKS = {}
     MAX_OPEN_LENGTH = 0
-    IterativeDFS(initial_state)
+    iterative_bfs(initial_state)
     print(str(COUNT)+" states expanded.")
     print('MAX_OPEN_LENGTH = '+str(MAX_OPEN_LENGTH))
 
 
-def IterativeDFS(initial_state):
+def iterative_bfs(initial_state):
     global COUNT, BACKLINKS, MAX_OPEN_LENGTH
 
-    # STEP 1. Put the start state on a list OPEN
     open_ = [initial_state]
     closed_ = []
     BACKLINKS[initial_state] = None
+    visited = {}
+    visited[initial_state.__hash__()] = 0
+    # This implementation differs from the example implementation for the DFS in some points. The changes I made are
+    # explained in more detail in the comments in the IDDFS.py file.
 
-    # STEP 2. If OPEN is empty, output “DONE” and stop.
     while open_:
         report(open_, closed_, COUNT)
         if len(open_) > MAX_OPEN_LENGTH:
             MAX_OPEN_LENGTH = len(open_)
 
-        # STEP 3. Select the first state on OPEN and call it S.
-        #         Delete S from OPEN.
-        #         Put S on CLOSED.
-        #         If S is a goal state, output its description
         s = open_.pop(0)
+        # In contrast to the IDDFS we pop elements at the different end of open_ then where we append them. This lets
+        # us use open_ as a queue instead of a stack.
+
+        current_depth = visited[s.__hash__()]
         closed_.append(s)
 
         if Problem.GOAL_TEST(s):
@@ -63,27 +65,15 @@ def IterativeDFS(initial_state):
             return
         COUNT += 1
 
-        # STEP 4. Generate the list L of successors of S and delete
-        #         from L those states already appearing on CLOSED.
-        l_ = []
         for op in Problem.OPERATORS:
             if op.precond(s):
                 new_state = op.state_transf(s)
-                if not (new_state in closed_):
-                    l_.append(new_state)
+                if new_state.__hash__() not in visited or visited[new_state.__hash__()] > current_depth:
+                    open_.append(new_state)
+                    visited[new_state.__hash__()] = current_depth
                     BACKLINKS[new_state] = s
 
-        # Delete from L any members of OPEN that occur on L.
-        # Insert all members of L at the end of OPEN.
-        for s2 in open_:
-            for i in range(len(l_)):
-                if s2 == l_[i]:
-                    del l_[i]
-                    break
-
-        open_ = open_ + l_
         print_statel_ist("OPEN", open_)
-    # STEP 6. Go to Step 2.
 
 
 def print_statel_ist(name, lst):

@@ -1,0 +1,27 @@
+\section{Farmer, fox, chicken, grain}
+
+For this problem the operators are denoted by the passengers crossing the river.
+Therefore, the possible operators are (F), (Ff), (Fc), (Fg).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+					& DFS	& BFS	& IDDFS	\\
+\hline
+Length of the path	&  7	&  7	& 7 	\\
+\hline
+Nodes expanded		&  7	&  24	& 14	\\
+\hline
+Path found			& (Fc)	& (Fc)	& (Fc)	\\
+					& (F)	& (F)	& (F)	\\
+					& (Ff)	& (Ff)	& (Fg)	\\
+					& (Fc)	& (Fc)	& (Fc)	\\
+					& (Fg)	& (Fg)	& (Ff)	\\
+					& (F)	& (F)	& (F)	\\
+					& (Fc)	& (Fc)	& (Fc)	\\
+\hline
+
+\end{tabular}
+\caption{Solution paths found for the Farmer, fox, chicken, grain problem.}
+\end{table}
