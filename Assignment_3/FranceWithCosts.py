@@ -10,11 +10,11 @@ PROBLEM_CREATION_DATE = "23-JAN-2019"
 
 # The following field is mainly for the human solver, via either the Text_SOLUZION_Client.
 # or the SVG graphics client.
-PROBLEM_DESC=\
- '''The <b>"
-France-Trip Planning"</b> problem is to find a shortest driving route from the
-city of Rennes to the city of Avignon, using the map data provided.
-'''
+PROBLEM_DESC= \
+    '''The <b>"
+   France-Trip Planning"</b> problem is to find a shortest driving route from the
+   city of Rennes to the city of Avignon, using the map data provided.
+   '''
 #</METADATA>
 
 #<COMMON_DATA>
@@ -67,62 +67,62 @@ DISTANCE['Paris'] = {'Calais':297,'Nancy':372,'Dijon':313,'Limoges':396,'Rennes'
 
 class State():
 
-  def __init__(self, name="no name yet"):
+    def __init__(self, name="no name yet"):
 
-    self.name = name
+        self.name = name
 
-  def __eq__(self,s2):
-    #print("In State.__eq__: s2 is ", str(s2))
-    return self.name==s2.name
+    def __eq__(self,s2):
+        #print("In State.__eq__: s2 is ", str(s2))
+        return self.name==s2.name
 
-  def __str__(self):
-    return self.name
+    def __str__(self):
+        return self.name
 
-  def __hash__(self):
-    return (self.__str__()).__hash__()
+    def __hash__(self):
+        return (self.__str__()).__hash__()
 
-  def copy(self):
-    # Performs an appropriately deep copy of a state,
-    # for use by operators in creating new states.
-    news = State()
-    news.name = self.name
-    return news 
+    def copy(self):
+        # Performs an appropriately deep copy of a state,
+        # for use by operators in creating new states.
+        news = State()
+        news.name = self.name
+        return news
 
-  def ith_neighbor_exists(self,i):
-    '''Tests whether there are enough adjacent cities
-    to go to the ith.'''
-    return len(ADJ[self.name])>i
+    def ith_neighbor_exists(self,i):
+        '''Tests whether there are enough adjacent cities
+        to go to the ith.'''
+        return len(ADJ[self.name])>i
 
-  def move(self,i):
-    '''Assuming it's legal to transition to the ith neighbor,
-    this does it.'''
-    neighbor = STATES[ADJ[self.name][i]]
-    return neighbor
+    def move(self,i):
+        '''Assuming it's legal to transition to the ith neighbor,
+        this does it.'''
+        neighbor = STATES[ADJ[self.name][i]]
+        return neighbor
 
-  def edge_distance(self, s2):
-    return DISTANCE[self.name][s2.name]
+    def edge_distance(self, s2):
+        return DISTANCE[self.name][s2.name]
 
 def goal_test(s):
-  return s.name==DESTINATION_CITY
+    return s.name==DESTINATION_CITY
 
 def goal_message(s):
-  return "Congratulations on finding a route to Avignon!"
+    return "Congratulations on finding a route to Avignon!"
 
 class Operator:
-  def __init__(self, name, precond, state_transf):
-    self.name = name
-    self.precond = precond
-    self.state_transf = state_transf
+    def __init__(self, name, precond, state_transf):
+        self.name = name
+        self.precond = precond
+        self.state_transf = state_transf
 
-  def is_applicable(self, s):
-    return self.precond(s)
+    def is_applicable(self, s):
+        return self.precond(s)
 
-  def apply(self, s):
-    return self.state_transf(s)
+    def apply(self, s):
+        return self.state_transf(s)
 
 def create_all_states():
-  for name in ADJ.keys():
-    STATES[name]=State(name)
+    for name in ADJ.keys():
+        STATES[name]=State(name)
 
 create_all_states()
 #</COMMON_CODE>
@@ -134,10 +134,10 @@ CREATE_INITIAL_STATE = lambda : STATES[STARTING_CITY]
 #<OPERATORS>
 
 OPERATORS = [Operator(
-  "Go to neighboring city number "+str(i),
-  lambda s, i1=i: s.ith_neighbor_exists(i1),
-  lambda s, i1=i: s.move(i1))
-             for i in range(6)] # Paris has the most neighbors (6)
+    "Go to neighboring city number "+str(i),
+    lambda s, i1=i: s.ith_neighbor_exists(i1),
+    lambda s, i1=i: s.move(i1))
+    for i in range(6)] # Paris has the most neighbors (6)
 #</OPERATORS>
 
 #<GOAL_TEST> (optional)
