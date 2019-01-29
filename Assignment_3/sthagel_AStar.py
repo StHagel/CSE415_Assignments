@@ -1,11 +1,13 @@
-""" sthagel_AStar.py
+''' sthagel_AStar.py
  A* Search of a problem space.
  Version 0.1, January 23, 2019.
  Stephan Hagel
 
+ This is a modified version of the starter code provided by Steve Tanimoto.
+
  Usage:
  python3 sthagel_AStar.py FranceWithDXHeuristics
-"""
+'''
 
 import sys
 
@@ -20,7 +22,7 @@ else:
 print("\nWelcome to UCS")
 
 COUNT = None  # Number of nodes expanded.
-MAX_open__LENGTH = None  # How long open_ ever gets.
+MAX_OPEN_LENGTH = None  # How long open_ ever gets.
 SOLUTION_PATH = None  # List of states from initial to goal, along lowest-cost path.
 TOTAL_COST = None  # Sum of edge costs along the lowest-cost path.
 BACKLINKS = {}  # Predecessor links, used to recover the path.
@@ -28,6 +30,7 @@ BACKLINKS = {}  # Predecessor links, used to recover the path.
 # The value g(s) represents the cost along the best path found so far
 # from the initial state to state s.
 g = {}  # We will use a global hash table to associate g values with states.
+f = {}  # Additionally to g we need to store f.
 h = Problem.h  # This will make life a whole lot easier.
 
 
@@ -107,44 +110,55 @@ def runUCS():
     initial_state = Problem.CREATE_INITIAL_STATE()
     print("Initial State:")
     print(initial_state)
-    global COUNT, BACKLINKS, MAX_open__LENGTH, SOLUTION_PATH
+    global COUNT, BACKLINKS, MAX_OPEN_LENGTH, SOLUTION_PATH
     COUNT = 0
     BACKLINKS = {}
-    MAX_open__LENGTH = 0
-    SOLUTION_PATH = UCS(initial_state)
+    MAX_OPEN_LENGTH = 0
+    SOLUTION_PATH = a_star_search(initial_state)
     print(str(COUNT) + " states expanded.")
-    print('MAX_open__LENGTH = ' + str(MAX_open__LENGTH))
+    print('MAX_OPEN_LENGTH = ' + str(MAX_OPEN_LENGTH))
     # print("The CLOSED list is: ", ''.join([str(s)+' ' for s in CLOSED]))
 
 
-def UCS(initial_state):
-    """Uniform Cost Search. This is the actual algorithm."""
-    global g, COUNT, BACKLINKS, MAX_open__LENGTH, CLOSED, TOTAL_COST
+def a_star_search(initial_state):
+    """A* search. This is the actual algorithm."""
+    global g, COUNT, BACKLINKS, MAX_OPEN_LENGTH, CLOSED, TOTAL_COST, f
+    # We need to add g and f to the list of global variables used in the algorithm
+
     CLOSED = []
+    closed_values = {}
+    # closed_values will track the f-value of closed states
+
     BACKLINKS[initial_state] = None
     # The "Step" comments below help relate UCS's implementation to
     # those of Depth-First Search and Breadth-First Search.
 
     # STEP 1a. Put the start state on a priority queue called open_
     open_ = MyPriorityQueue()
-    open_.insert(initial_state, 0)
+    open_.insert(initial_state, h(initial_state))
     # STEP 1b. Assign g=0 to the start state.
+
     g[initial_state] = 0.0
+    f[initial_state] = h(initial_state)
+    # The f-value of the initial state is given entirely by its heuristic value.
 
     # STEP 2. If open_ is empty, output “DONE” and stop.
-    while len(open_) > 0:
+    while open_:
         if VERBOSE:
             report(open_, CLOSED, COUNT)
-        if len(open_) > MAX_open__LENGTH:
-            MAX_open__LENGTH = len(open_)
+        if len(open_) > MAX_OPEN_LENGTH:
+            MAX_OPEN_LENGTH = len(open_)
 
         # STEP 3. Select the state on open_ having lowest priority value and call it S.
         #         Delete S from open_.
         #         Put S on CLOSED.
         #         If S is a goal state, output its description
-        (S, P) = open_.delete_min()
+        (S, p_) = open_.delete_min()
         # print("In Step 3, returned from open_.delete_min with results (S,P)= ", (str(S), P))
+
         CLOSED.append(S)
+        closed_values[S] = p_
+        # We store the f-value of the state, we put on closed, in closed_values
 
         if Problem.GOAL_TEST(S):
             print(Problem.GOAL_MESSAGE_FUNCTION(S))
@@ -161,34 +175,70 @@ def UCS(initial_state):
         for op in Problem.OPERATORS:
             if op.precond(S):
                 new_state = op.state_transf(S)
-                if new_state in CLOSED:
-                    # print("Already have this state, in CLOSED. del ...")
-                    del new_state
-                    continue
                 edge_cost = S.edge_distance(new_state)
                 new_g = gs + edge_cost
+                new_f = new_g + h(new_state)
+                # Additionally to the distance from the start, we also need to get the f-value of the new state,
+                # given by the distance plus the heuristic value
+
+                # Next we loop through closed...
+                for i in range(len(CLOSED)):
+                    try:
+                        # and check if new_state already appears on closed. If so, we check which f-value is
+                        # lower and keep that element.
+                        if CLOSED[i] == new_state and closed_values[CLOSED[i]] <= new_f:
+                            del new_state
+                            break
+
+                        elif CLOSED[i] == new_state and closed_values[CLOSED[i]] > new_f:
+                            del closed_values[CLOSED[i]]
+                            # We need to make sure to also delete the entry in closed_values, which corresponds to
+                            # the deleted element.
+                            del CLOSED[i]
+
+                    except IndexError:
+                        # During debugging I ran into this error a few times. In the final version it no longer
+                        # occurs, but I will leave it in just in case.
+                        print("Index i out of range when looping through closed.\ni = " + str(i) +
+                              "\nlen(CLOSED) = " + str(len(CLOSED)))
+                        continue
 
                 # If new_state already exists on open_:
                 #   If its new priority is less than its old priority,
                 #     update its priority on open_, and set its BACKLINK to S.
                 #   Else: forget out this new state object... delete it.
+                # if new_state in locals() or new_state in globals():
+                try:
+                    if new_state in open_:
+                        # print("new_state is in open_ already, so...")
+                        p2 = open_[new_state]
+                        if new_f < p2:
+                            # print("New priority value is lower, so del older one")
+                            del open_[new_state]
+                            open_.insert(new_state, new_f)
+                            # We need to insert new_f instead of new_g, in order for the algorithm to work properly.
 
-                if new_state in open_:
-                    # print("new_state is in open_ already, so...")
-                    p2 = open_[new_state]
-                    if new_g < p2:
-                        # print("New priority value is lower, so del older one")
-                        del open_[new_state]
-                        open_.insert(new_state, new_g)
+                            g[new_state] = new_g
+                            f[new_state] = new_f
+                            # It is crucial to only add the new values for g and f only down here to the dictionary,
+                            # as otherwise their values would also be written into the dictionary, if new_state
+                            # would be deleted instead of being added to open_.
+                        else:
+                            # print("Older one is better, so del new_state")
+                            del new_state
+                            continue
                     else:
-                        # print("Older one is better, so del new_state")
-                        del new_state
-                        continue
-                else:
-                    # print("new_state was not on open_ at all, so just put it on.")
-                    open_.insert(new_state, new_g)
-                BACKLINKS[new_state] = S
-                g[new_state] = new_g
+                        # print("new_state was not on open_ at all, so just put it on.")
+                        open_.insert(new_state, new_f)
+                        g[new_state] = new_g
+                        f[new_state] = new_f
+                        # As stated above, we only now have to add new_f and new_g to the dictionary.
+                    BACKLINKS[new_state] = S
+
+                except UnboundLocalError:
+                    # If we deleted new_state in line 190, because it already appeared on closed,
+                    # the program would crash when trying to check, if new_state is in open_.
+                    continue
 
         # print_state_queue("open_", open_)
     # STEP 6. Go to Step 2.
