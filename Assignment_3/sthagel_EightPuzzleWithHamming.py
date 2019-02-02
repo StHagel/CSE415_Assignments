@@ -15,7 +15,7 @@ def h(s):
     for i in range(3):
         for j in range(3):
             k = 3 * i + j
-            if s.b[i][j] != k:
+            if s.b[i][j] != k and k != 0:
                 counter += 1
 
     return counter
