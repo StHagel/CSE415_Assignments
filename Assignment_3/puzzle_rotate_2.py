@@ -1,6 +1,6 @@
-'''puzzle3.py
+"""puzzle3.py
 An instance of the Eight Puzzle.
-'''
+"""
 
 from EightPuzzle import *
 
@@ -11,5 +11,3 @@ init_state_list = [[6, 3, 0],
                    [8, 5, 2]]
 
 CREATE_INITIAL_STATE = lambda: State(init_state_list)
-
-

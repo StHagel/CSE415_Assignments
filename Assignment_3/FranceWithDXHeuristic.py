@@ -8,11 +8,12 @@ The particular heuristic is 10 * longitude_difference, or
 
 from FranceWithCosts import *
 
-LONGITUDE = {'Avignon':48, 'Bordeaux':-6, 'Brest': -45, 'Caen':-4,
-             'Calais': 18, 'Dijon':51, 'Grenoble':57, 'Limoges':12,
-             'Lyon':48, 'Marseille':53, 'Montpellier':36, 'Nancy':62,
-             'Nantes': -16, 'Nice':73, 'Paris':23, 'Rennes': -17,
-             'Strasbourg': 77, 'Toulouse':14}
+LONGITUDE = {'Avignon': 48, 'Bordeaux': -6, 'Brest': -45, 'Caen': -4,
+             'Calais':  18, 'Dijon': 51, 'Grenoble': 57, 'Limoges': 12,
+             'Lyon': 48, 'Marseille': 53, 'Montpellier': 36, 'Nancy': 62,
+             'Nantes': -16, 'Nice': 73, 'Paris': 23, 'Rennes': -17,
+             'Strasbourg':  77, 'Toulouse': 14}
+
 
 def h(s):
     '''We return an estimate of the horizontal distance
@@ -25,4 +26,4 @@ def h(s):
     return 10.0 * abs(dx)
 
 # A simple test:
-#print(h('Nantes'))
+# print(h('Nantes'))

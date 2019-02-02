@@ -20,7 +20,7 @@ PROBLEM_DESC= \
 class State:
     def __init__(self, b):
         if len(b)==9:
-            list_of_lists = [b[:3],b[3:6],b[6:]]
+            list_of_lists = [b[:3], b[3:6], b[6:]]
         else:
             list_of_lists = b
         self.b = list_of_lists
@@ -119,14 +119,16 @@ class Operator:
 #<INITIAL_STATE>
 # Use default, but override if new value supplied
 # by the user on the command line.
+
+
 try:
     import sys
     init_state_string = sys.argv[2]
-    print("Initial state as given on the command line: "+init_state_string)
+    print("Initial state as given on the command line: " + init_state_string)
     init_state_list = eval(init_state_string)
 except:
     init_state_list = [[3, 1, 2], [0, 5, 8], [4, 6, 7]]
-    print("Using default initial state list: "+str(init_state_list))
+    print("Using default initial state list: " + str(init_state_list))
     print(" (To use a specific initial state, enter it on the command line, e.g.,")
     print("python3 UCS.py EightPuzzle '[[3, 1, 2], [0, 4, 5], [6, 7, 8]]'")
 

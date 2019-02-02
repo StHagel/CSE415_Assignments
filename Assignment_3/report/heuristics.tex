@@ -1,0 +1,36 @@
+\section{Heuristics for the Eight Puzzle} \label{sec:heuristics8}
+
+For the sake of fitting the table onto one page, I will not include the initial configuration of each of the puzzles
+inside of the table, but I will rather give them outside, as the report template suggests.
+Since none of the problems took longer than five minutes with either heuristic, I did not need to abort any of them.
+Therefore, I won't include this in the table either.
+The Table contains another column though, called "Time".
+The value for "Time" is based on the time it took for the algorithm to solve the problem on my Laptop with an Intel
+Core i5-560M processor (3\;M cache, 2.66\;GHz) and 3.75\;GB of RAM .
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+        \hline
+        Puzzle  & Heuristic   & Solved? & \# Soln Edges & Soln Cost & \# Expanded   & Max OPEN  & Time\\
+        \hline
+        A   & none (UCS) &   Y   &       7      &     7    &     166    &   101  &   0.1 s  \\
+        A   & Hamming    &   Y   &       7      &     7    &       8    &     6  & \textless 0.1 s  \\
+        A   & Manhattan  &   Y   &       7      &     7    &       7    &     6  & \textless 0.1 s  \\
+        \hline
+        B   & none (UCS) &   Y   &      12      &    12    &    1490    &   898  &   5.3 s  \\
+        B   & Hamming    &   Y   &      12      &    12    &      96    &    72  &   0.1 s  \\
+        B   & Manhattan  &   Y   &      12      &    12    &      33    &    25  & \textless 0.1 s  \\
+        \hline
+        C   & none (UCS) &   Y   &      14      &    14    &    4070    &  2290  &  38.1 s  \\
+        C   & Hamming    &   Y   &      14      &    14    &     196    &   127  &   0.2 s  \\
+        C   & Manhattan  &   Y   &      14      &    14    &      56    &    39  & \textless 0.1 s  \\
+        \hline
+        D   & none (UCS) &   Y   &      16      &    16    &    7982    &  4700  & 158.0 s  \\
+        D   & Hamming    &   Y   &      16      &    16    &     617    &   365  &   1.5 s  \\
+        D   & Manhattan  &   Y   &      16      &    16    &     148    &    96  &   0.1 s  \\
+        \hline
+    \end{tabular}
+    \label{tab:heuristics8}
+    \caption{Comparison of the Heuristics for the Eight Puzzle.}
+\end{table}
