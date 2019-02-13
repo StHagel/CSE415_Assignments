@@ -37,6 +37,9 @@ open_lines_w = []
 open_lines_b = []
 
 USE_CUSTOM_STATIC_EVAL_FUNCTION = True
+time_passed = 0
+start_time = 0
+global_time_limit = 0
 
 
 class MY_TTS_State(TTS_State):
@@ -251,12 +254,13 @@ class MY_TTS_State(TTS_State):
 
 
 def take_turn(current_state, last_utterance, time_limit):
-    time_limit = 10.0
+    global start_time
+    # time_limit = 1.0
     start_time = perf_counter()
-    time_passed = 0
+    global global_time_limit, time_passed
+    global_time_limit = time_limit
 
     # Compute the new state for a move.
-    # Start by copying the current state.
     global vacant_squares
 
     for l in range(len(vacant_squares)):
@@ -269,6 +273,7 @@ def take_turn(current_state, last_utterance, time_limit):
         except IndexError:
             continue
 
+    # Start by copying the current state.
     new_state = TTS_State(current_state.board)
     # Fix up whose turn it will be.
     who = current_state.whose_turn
@@ -276,17 +281,19 @@ def take_turn(current_state, last_utterance, time_limit):
 
     new_state.whose_turn = new_who
 
+    # Do some Python class magic to enable the static evaluation function
     current_state.__class__ = MY_TTS_State
     new_state.__class__ = MY_TTS_State
 
-    # Place a new tile
-
-    # Construct a representation of the move that goes from the
-    # currentState to the newState.
+    # The maxply variable will be the variable, that counts the iterative depth.
     maxply = 0
-    time_passed = perf_counter() - start_time
+    # We need to initialise the move variable. As
     move = None
-    while time_passed < time_limit * 0.9:
+    threshold = 0.8
+    # The threshold value defines, how much time has to be left in order for the program to still look for a move.
+    # A value of 0.9 stands for 90% etc.
+    time_passed = perf_counter() - start_time
+    while time_passed < time_limit * threshold:
         # Right now the search goes into a new loop, as long as there is at least 90% of time left
         if who == 'W':
             newsval = -100000
@@ -301,7 +308,7 @@ def take_turn(current_state, last_utterance, time_limit):
 
             time_passed = perf_counter() - start_time
 
-            if time_passed >= time_limit * 0.9:
+            if time_passed >= time_limit * threshold:
                 break
 
         for (i, j) in vacant_squares:
@@ -330,6 +337,9 @@ def minimax(state, whosturn, plyleft):
         if (whosturn == 'W' and newval > provisional) or \
                 (whosturn == 'B' and newval < provisional):
             provisional = newval
+        time_passed = perf_counter() - start_time
+        if time_passed >= 0.8 * global_time_limit:
+            break
 
     return provisional
 
