@@ -120,8 +120,9 @@ def extract_policy(S, A):
             if new_value > best_value:
                 best_action = action
                 best_value = new_value
-
-        Policy[state] = best_action
+        
+        if best_action:
+            Policy[state] = best_action
         # write the best action into the Policy dictionary
 
     return Policy

@@ -35,11 +35,12 @@ Value Iteration.
 
 '''
 
-import YourUWNetID_VI as VI
+import sthagel_VI as VI
 import YourUWNetID_Q_Learn as Q_Learn
 
 from TowersOfHanoi import *
 import TowersOfHanoi
+# import pdb
 
 Compare_QLearn_to_VI = False
 try:
@@ -693,6 +694,7 @@ def user_drives_agent_via_text_input():
 # It also demonstrates how to show values on the states,
 # draw a text label, and highlight a particular state.
 def set_up_state_space():
+  # pdb.set_trace()
   global ALL_STATES, CLOSED, Terminal_state, Agent_state, N_disks, STATES_AND_EDGES
   global NEED_Q_LEARN_SETUP, Q_from_VI, Q_from_QL
   global GOLDEN_PATH, SILVER_PATH, NGOALS

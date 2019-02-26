@@ -1,0 +1,20 @@
+\subsection*{Question 1a:}\label{sec:1a}
+
+It took 4 iterations to turn 9 of the 27 states green.
+
+\subsection*{Question 1b:}\label{sec:1b}
+
+It took 8 total iterations to turn all 27 steps green.
+Running a 9th iteration does not change the values anymore.
+
+\subsection*{Question 1c:}\label{sec:1c}
+
+The policy shown suggests to "go right" in every single state.
+This happens, because every state has a value of 100.0 and therefore the algorithm gives each state the same value as the goal.
+Therefore it doesn't bother to go to the goal, since the values are the same.
+%The policy shown results in finding the quickest path from each state, since the value of the states only updates one move at a time.
+%My implementation of the problem actually fails to show the correct policy, if the problem is deterministic, as the assignment wants, and states get reiterated.
+%Doing more iterations on states, that have already been done sets the policy to "go right" everytime.
+%If the program is run with 20\% noise though, it works just as fine and still gives the right policy.
+
+
