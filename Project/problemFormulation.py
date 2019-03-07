@@ -37,9 +37,9 @@ class Environment(object):
     # Select a random_action
     def random_action(self):
         f = np.random.randint(6)
-        l = np.random.randint(self.N)
+        l_ = np.random.randint(self.N)
         d = 1 + np.random.randint(3)
-        return [f, l, d]
+        return [f, l_, d]
 
     def get_state(self):
         return self.cube.stickers
