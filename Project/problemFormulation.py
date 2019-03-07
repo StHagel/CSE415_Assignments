@@ -8,7 +8,7 @@ import numpy as np
 from cube import Cube
 
 
-class Environment(object):
+class Environment:
 
     # Initialize a finished cube
     def __init__(self, N):
@@ -32,7 +32,10 @@ class Environment(object):
 
     # The reward function might be upgraded later on with some type of heuristics.
     def reward(self):
-        return self.cube.finish()
+        if self.cube.finish():
+            return 1.0
+        else:
+            return 0.0
 
     # Select a random_action
     def random_action(self):

@@ -19,7 +19,7 @@ conventions
 import numpy as np
 
 
-class Cube(object):
+class Cube:
     """
     Cube
     ----
