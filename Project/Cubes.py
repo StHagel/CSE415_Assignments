@@ -370,6 +370,22 @@ def threesReward(state, action, state_p):
         return 1.0  # the Goal has been reached
     
     return -0.01   # cost of living.
+
+
+def reward(state=None, size=2, cost=0.0):
+    if state is None:
+        return 0.0
+
+    if size == 2:
+        if state == GOAL_STATE_TWO:
+            return 1.0
+
+    elif size == 3:
+        if state == GOAL_STATE_THREE:
+            return 1.0
+
+    else:
+        return cost
     
 
 t = State(GOAL_STATE_THREE)
