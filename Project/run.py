@@ -12,26 +12,27 @@ v) increase n by one and go back to i)
 
 import Cubes
 import random
+import sys
 from math import fabs
 
 GOD_NUMBER_TWO = 14  # The maximum number of moves needed to solve a 2x2x2 cube from any given state
 GOD_NUMBER_THREE = 26  # The maximum number of moves needed to solve a 3x3x3 cube from any given state
 N_EPISODES = 100  # Number of episodes the agent uses on each configuration
-MAX_MOVES = 3  # The maximum number of moves we make starting from a solved cube to create a new initial state
+MAX_MOVES = 4  # The maximum number of moves we make starting from a solved cube to create a new initial state
 MAX_ITER = 2  # The maximum number of wrong moves allowed until the cube is reset.
 
 Q_VALUES = {}
 POLICY = {}
 KNOWN_STATES = []
 ACTIONS = None
-EPSILON = 0.4
+EPSILON = 0.3
 ALPHA = 0.5
 DISCOUNT = 0.9
-SIZE = 2
+SIZE = 3  # Size = 2 is still buggy
 LIVING_COST = 0.0
 
 # TODO: Implement a method to save and load Q-Values and policies.
-SAVE_Q_VALS = True
+SAVE_Q_VALS = False
 LOAD_Q_VALS = False
 
 
@@ -44,30 +45,15 @@ def run():
             print("Reading qvals")
             s = f.read()
             Q_VALUES = eval(s)
-            print("jup, workz")
         with open("policy.txt", "r") as f:
             print("reading pol")
             s = f.read()
             POLICY = eval(s)
-            print("works 2")
-
-        if SIZE == 2:
-            cube = Cubes.State(Cubes.GOAL_STATE_TWO)
-
-        else:
-            cube = Cubes.State(Cubes.GOAL_STATE_THREE)
-        cube = Cubes.move(cube, 0, 1)
-        cube = Cubes.move(cube, 3, -1)
-        cube = Cubes.move(cube, 2, 1)
-        cube = Cubes.move(cube, 4, -1)
-        cube = Cubes.move(cube, 5, 1)
-        print(cube)
-        qlearn(cube, 4, max_moves=10)
 
     else:
         # This loop handles the curriculum learning
         for current_max in range(MAX_MOVES):
-            print(str(current_max + 1))
+            # print(str(current_max + 1))
             num_steps = 12 * (current_max + 1)
 
             # At each step in curr. learning we take `num_steps` different starting positions to learn from
@@ -81,7 +67,7 @@ def run():
 
                 # Shuffling the cube
                 for j in range(current_max + 1):
-                    # print("Shuffling...")
+                    print("Shuffling...")
                     rm = random_move()
                     cube = Cubes.move(cube, rm[0], rm[1])
 
@@ -116,7 +102,7 @@ def run():
         testcube = Cubes.move(testcube, 3, -1)
         testcube = Cubes.move(testcube, 2, 1)
         testcube = Cubes.move(testcube, 4, -1)
-        # testcube = Cubes.move(testcube, 5, 1)
+        testcube = Cubes.move(testcube, 5, 1)
 
         test_model(testcube, 5)
 
@@ -140,6 +126,7 @@ def qlearn(start_state, currmax, discount=DISCOUNT, epsilon=EPSILON, alpha=ALPHA
     :param alpha: The learning rate
     :param max_moves: The maximum number of moves the agent gets to take before the state is reset to `start_state`
     :param eps: The number of episodes the agent is trained
+    :param testing: Enables more detailed output and tests the trained model
     """
     global ACTIONS, Q_VALUES, SIZE, POLICY, KNOWN_STATES
     goal_counter = 0  # Counts how many times we already reached the goal
@@ -154,6 +141,7 @@ def qlearn(start_state, currmax, discount=DISCOUNT, epsilon=EPSILON, alpha=ALPHA
     while goal_counter < 10 * currmax and episode < eps:
         if testing:
             print("Episode Nr. " + str(episode + 1) + ":")
+        print("Episode Nr. " + str(episode + 1) + ":")
         episode += 1
 
         current_state = start_state
@@ -196,9 +184,10 @@ def qlearn(start_state, currmax, discount=DISCOUNT, epsilon=EPSILON, alpha=ALPHA
 
             # Calculate the sample for the move we did
             rew = Cubes.reward(new_state, SIZE, LIVING_COST)
-            if fabs(rew - 1.0) < 1e-7:
+            if fabs(rew - 1.0) < 1e-5:
                 if testing:
                     print("reached a goal state!")
+                print("reached a goal state!")
                 goal_counter += 1
 
             sample = rew + discount * maxQ
@@ -317,5 +306,16 @@ def test_model(cube, currmax):
         a = input()
 
 
-if __name__ == '__main__':
+use_default = input("Use default values? (Y/n)")
+if not use_default.lower() == "n":
+    run()
+else:
+    SIZE = int(input("Please input Cube size. (Only 3 working right now): "))
+    DISCOUNT = float(input("Please input discount. (Default = 0.9): "))
+    ALPHA = float(input("Please input learning rate. (Default = 0.5): "))
+    EPSILON = float(input("Please input epsilon. (Default = 0.3): "))
+    LIVING_COST = float(input("Please input living cost. (Negative number, default = 0): "))
+    N_EPISODES = int(input("Please input number of episodes. (Default = 100): "))
+    MAX_MOVES = int(input("Please input maximum number of scrambles. (Default = 3): "))
+    MAX_ITER = int(input("Please input maximum number of moves allowed. (Default = 2): "))
     run()

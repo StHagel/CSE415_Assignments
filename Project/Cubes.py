@@ -1,5 +1,4 @@
 """Cubes.py
-
 Define a cube
 """
 
@@ -13,8 +12,12 @@ ACTIONS = ['front-face-right', 'back-face-right', 'left-face-right', 'right-face
 
 
 class State:
-    def __init__(self, d):
+    def __init__(self, d, size=None):
         self.d = d
+        if size is None:
+            self.size = len(d[0])
+        else:
+            self.size = size
 
     def __str__(self):
         # Produces a brief textual description of a state.
@@ -36,7 +39,7 @@ class State:
         
     def print_four_faces(self, face1, face2, face3, face4, indent):
         txt = indent
-        for row in range(3):
+        for row in range(self.size):
             for n in face1[row]:
                 txt = txt + "[" + str(n) + "]"
             txt = txt + "  "
@@ -70,7 +73,7 @@ class State:
     def __copy__(self):
         # Performs an appropriately deep copy of a state,
         # for use by operators in creating new states.
-        news = State([])
+        news = State([], self.size)
         for face in self.d:
             newface = copy_face(face)
             news.d.append(newface)
@@ -167,18 +170,32 @@ def rotate_face(s, facenum, direction):
     face = s.d[facenum]
     newf = copy_face(s.d[facenum])
 
-    # Rotate clockwise
-    if direction == 1:
-        # print("Rotate clockwise")
-        for i in range(3):
-            for j in range(3):
-                newf[i][j] = face[2-j][i]
-
-    # Rotate counterclockwise
-    elif direction == -1:
-        for i in range(3):
-            for j in range(3):
-                newf[i][j] = face[j][2-i]
+    if s.size == 2:
+        # Rotate clockwise
+        if direction == 1:
+            # print("Rotate clockwise")
+            for i in range(2):
+                for j in range(2):
+                    newf[i][j] = face[1-j][i]
+    
+        # Rotate counterclockwise
+        elif direction == -1:
+            for i in range(2):
+                for j in range(2):
+                    newf[i][j] = face[j][1-i]
+    else:
+        # Rotate clockwise
+        if direction == 1:
+            # print("Rotate clockwise")
+            for i in range(3):
+                for j in range(3):
+                    newf[i][j] = face[2-j][i]
+    
+        # Rotate counterclockwise
+        elif direction == -1:
+            for i in range(3):
+                for j in range(3):
+                    newf[i][j] = face[j][2-i]
     
     return newf
 
@@ -187,21 +204,44 @@ def rotate_face(s, facenum, direction):
 def rotate_edge(s, facenum, direction):
     edge_set = edge_rotation[facenum]
     updated_faces = {}
-    for i in range(4):
-        
-        edge_tuple = edge_set[i]
-        previous_tuple = edge_set[(i-direction) % 4]
-        # grab current face we are looking at
-        curr_face = s.d[edge_tuple[0]]
-        # grab previous face
-        prev_face = s.d[previous_tuple[0]]
-        # grab edge of previous face
-        temp_edge = get_edge(prev_face, previous_tuple[1])
-        # update edge of new face
-        newf = set_edge(curr_face, edge_tuple[1], temp_edge)
-        # Update face
-        updated_faces[edge_tuple[0]] = newf
     
+    if s.size == 3:
+        for i in range(4):
+            
+            edge_tuple = edge_set[i]
+            previous_tuple = edge_set[(i-direction) % 4]
+            # grab current face we are looking at
+            curr_face = s.d[edge_tuple[0]]
+            # grab previous face
+            prev_face = s.d[previous_tuple[0]]
+            # grab edge of previous face
+            temp_edge = get_edge(prev_face, previous_tuple[1])
+            # update edge of new face
+            newf = set_edge(curr_face, edge_tuple[1], temp_edge)
+            # Update face
+            updated_faces[edge_tuple[0]] = newf
+            # print(updated_faces)
+            
+    # else:
+    #     if direction == 1:
+    #         updated_faces = {edge_set[0][0]: s.d[edge_set[1][0]], edge_set[1][0]: s.d[edge_set[2][0]],
+    #                          edge_set[2][0]: s.d[edge_set[3][0]], edge_set[3][0]: s.d[edge_set[0][0]]}
+    #     else:
+    #         updated_faces = {edge_set[0][0]: s.d[edge_set[3][0]], edge_set[1][0]: s.d[edge_set[0][0]],
+    #                          edge_set[2][0]: s.d[edge_set[1][0]], edge_set[3][0]: s.d[edge_set[2][0]]}
+
+    else:
+        if direction == -1:
+            updated_faces = {edge_set[0][0]: [s.d[edge_set[0][0]][0], s.d[edge_set[1][0]][0]],
+                             edge_set[1][0]: [s.d[edge_set[1][0]][0], s.d[edge_set[2][0]][0]],
+                             edge_set[2][0]: [s.d[edge_set[2][0]][0], s.d[edge_set[3][0]][0]],
+                             edge_set[3][0]: [s.d[edge_set[3][0]][0], s.d[edge_set[0][0]][0]]}
+        else:
+            updated_faces = {edge_set[0][0]: [s.d[edge_set[0][0]][0], s.d[edge_set[3][0]][0]],
+                             edge_set[1][0]: [s.d[edge_set[1][0]][0], s.d[edge_set[0][0]][0]],
+                             edge_set[2][0]: [s.d[edge_set[2][0]][0], s.d[edge_set[1][0]][0]],
+                             edge_set[3][0]: [s.d[edge_set[3][0]][0], s.d[edge_set[2][0]][0]]}
+
     return updated_faces
 
 
@@ -377,27 +417,28 @@ def reward(state=None, size=2, cost=0.0):
         return 0.0
 
     if size == 2:
-        if state == GOAL_STATE_TWO:
+        if state.d == GOAL_STATE_TWO:
             return 1.0
+        else:
+            return 0.0
 
     elif size == 3:
-        if state == GOAL_STATE_THREE:
+        if state.d == GOAL_STATE_THREE:
             return 1.0
+        else:
+            return 0.0
 
     else:
         return cost
-    
 
-t = State(GOAL_STATE_THREE)
-t = move(t, 0, 1)
-t = move(t, 3, -1)
-t = move(t, 2, 1)
-t = move(t, 4, -1)
-t = move(t, 5, 1)
-t = move(t, 0, 1)
-t = move(t, 3, -1)
-t = move(t, 2, 1)
-t = move(t, 4, -1)
-t = move(t, 5, 1)
-print(t)
-START_STATE = t
+
+# testcube = State(GOAL_STATE_TWO)
+# print(testcube)
+# testcube = move(testcube, 3, -1)
+# print(testcube)
+# testcube = move(testcube, 2, 1)
+# print(testcube)
+# testcube = move(testcube, 4, -1)
+# print(testcube)
+# testcube = move(testcube, 5, 1)
+# print(testcube)
