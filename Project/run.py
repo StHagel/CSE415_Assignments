@@ -18,7 +18,7 @@ from math import fabs
 GOD_NUMBER_TWO = 14  # The maximum number of moves needed to solve a 2x2x2 cube from any given state
 GOD_NUMBER_THREE = 26  # The maximum number of moves needed to solve a 3x3x3 cube from any given state
 N_EPISODES = 100  # Number of episodes the agent uses on each configuration
-MAX_MOVES = 4  # The maximum number of moves we make starting from a solved cube to create a new initial state
+MAX_MOVES = 7  # The maximum number of moves we make starting from a solved cube to create a new initial state
 MAX_ITER = 2  # The maximum number of wrong moves allowed until the cube is reset.
 
 Q_VALUES = {}
@@ -28,7 +28,7 @@ ACTIONS = None
 EPSILON = 0.3
 ALPHA = 0.5
 DISCOUNT = 0.9
-SIZE = 3  # Size = 2 is still buggy
+SIZE = 2
 LIVING_COST = 0.0
 
 # TODO: Implement a method to save and load Q-Values and policies.
@@ -53,7 +53,7 @@ def run():
     else:
         # This loop handles the curriculum learning
         for current_max in range(MAX_MOVES):
-            # print(str(current_max + 1))
+            print("Shuffling " + str(current_max + 1) + " times.")
             num_steps = 12 * (current_max + 1)
 
             # At each step in curr. learning we take `num_steps` different starting positions to learn from
@@ -61,7 +61,7 @@ def run():
 
                 # Initializing a solved cube
                 if SIZE == 2:
-                    cube = Cubes.State(Cubes.GOAL_STATE_TWO)
+                    cube = Cubes.State(Cubes.GOAL_STATES_TWO[0])
                 else:
                     cube = Cubes.State(Cubes.GOAL_STATE_THREE)
 
@@ -93,7 +93,7 @@ def run():
 
         print("Testing the model")
         if SIZE == 2:
-            testcube = Cubes.State(Cubes.GOAL_STATE_TWO)
+            testcube = Cubes.State(Cubes.GOAL_STATES_TWO[0])
 
         else:
             testcube = Cubes.State(Cubes.GOAL_STATE_THREE)
@@ -147,10 +147,10 @@ def qlearn(start_state, currmax, discount=DISCOUNT, epsilon=EPSILON, alpha=ALPHA
         current_state = start_state
         current_move = 0
         if SIZE == 3:
-            gs = Cubes.GOAL_STATE_THREE
+            gs = Cubes.GOAL_STATES_THREE
         else:
-            gs = Cubes.GOAL_STATE_TWO
-        while not current_state.d == gs and not current_move == max_moves:
+            gs = Cubes.GOAL_STATES_TWO
+        while not current_state.d in gs and not current_move == max_moves:
             s = current_state
 
             # We need to generate a random number to decide, whether we apply our policy or make a random move.

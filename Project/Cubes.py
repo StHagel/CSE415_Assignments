@@ -17,7 +17,7 @@ class State:
         if size is None:
             self.size = len(d[0])
         else:
-            self.size = size
+            self.size=size
 
     def __str__(self):
         # Produces a brief textual description of a state.
@@ -114,33 +114,130 @@ GOAL_STATE_THREE = [
         [5, 5, 5]
     ]
 ]
+GOAL_STATES_THREE = [GOAL_STATE_THREE]
         
-# Data of a completed 2x2 cube        
-GOAL_STATE_TWO = [
-    [
-        [0, 0],
-        [0, 0]
-    ],
-    [
-        [1, 1],
-        [1, 1]
-    ],
-    [
-        [2, 2],
-        [2, 2]
-    ],
-    [
-        [3, 3],
-        [3, 3]
-    ],
-    [
-        [4, 4],
-        [4, 4]
-    ],
-    [
-        [5, 5],
-        [5, 5]
-    ]
+# Data of a completed 2x2 cube
+GOAL_STATES_TWO = [
+    [[[0, 0],
+    [0, 0]],
+    [[1, 1],
+    [1, 1]],
+    [[2, 2],
+    [2, 2]],
+    [[3, 3],
+    [3, 3]],
+    [[4, 4],
+    [4, 4]],
+    [[5, 5],
+    [5, 5]]],
+    [[[0, 0],
+    [0, 0]],
+    [[5, 5],
+    [5, 5]],
+    [[1, 1],
+    [1, 1]],
+    [[3, 3],
+    [3, 3]],
+    [[2, 2],
+    [2, 2]],
+    [[4, 4],
+    [4, 4]]],
+    [[[0, 0],
+    [0, 0]],
+    [[4, 4],
+    [4, 4]],
+    [[5, 5],
+    [5, 5]],
+    [[3, 3],
+    [3, 3]],
+    [[1, 1],
+    [1, 1]],
+    [[2, 2],
+    [2, 2]]],
+    [[[0, 0],
+    [0, 0]],
+    [[2, 2],
+    [2, 2]],
+    [[4, 4],
+    [4, 4]],
+    [[3, 3],
+    [3, 3]],
+    [[5, 5],
+    [5, 5]],
+    [[1, 1],
+    [1, 1]]],
+    [[[5, 5],
+    [5, 5]],
+    [[1, 1],
+    [1, 1]],
+    [[0, 0],
+    [0, 0]],
+    [[2, 2],
+    [2, 2]],
+    [[4, 4],
+    [4, 4]],
+    [[3, 3],
+    [3, 3]]],
+    [[[3, 3],
+    [3, 3]],
+    [[1, 1],
+    [1, 1]],
+    [[5, 5],
+    [5, 5]],
+    [[0, 0],
+    [0, 0]],
+    [[4, 4],
+    [4, 4]],
+    [[2, 2],
+    [2, 2]]],
+    [[[2, 2],
+    [2, 2]],
+    [[1, 1],
+    [1, 1]],
+    [[3, 3],
+    [3, 3]],
+    [[5, 5],
+    [5, 5]],
+    [[4, 4],
+    [4, 4]],
+    [[0, 0],
+    [0, 0]]],
+    [[[1, 1],
+    [1, 1]],
+    [[3, 3],
+    [3, 3]],
+    [[2, 2],
+    [2, 2]],
+    [[4, 4],
+    [4, 4]],
+    [[0, 0],
+    [0, 0]],
+    [[5, 5],
+    [5, 5]]],
+    [[[3, 3],
+    [3, 3]],
+    [[4, 4],
+    [4, 4]],
+    [[2, 2],
+    [2, 2]],
+    [[0, 0],
+    [0, 0]],
+    [[1, 1],
+    [1, 1]],
+    [[5, 5],
+    [5, 5]]],
+    [[[4, 4],
+    [4, 4]],
+    [[0, 0],
+    [0, 0]],
+    [[2, 2],
+    [2, 2]],
+    [[1, 1],
+    [1, 1]],
+    [[3, 3],
+    [3, 3]],
+    [[5, 5],
+    [5, 5]]]
 ]
         
 
@@ -170,7 +267,7 @@ def rotate_face(s, facenum, direction):
     face = s.d[facenum]
     newf = copy_face(s.d[facenum])
 
-    if s.size == 2:
+    if s.size==2:
         # Rotate clockwise
         if direction == 1:
             # print("Rotate clockwise")
@@ -205,43 +302,29 @@ def rotate_edge(s, facenum, direction):
     edge_set = edge_rotation[facenum]
     updated_faces = {}
     
-    if s.size == 3:
-        for i in range(4):
-            
-            edge_tuple = edge_set[i]
-            previous_tuple = edge_set[(i-direction) % 4]
-            # grab current face we are looking at
-            curr_face = s.d[edge_tuple[0]]
-            # grab previous face
-            prev_face = s.d[previous_tuple[0]]
-            # grab edge of previous face
-            temp_edge = get_edge(prev_face, previous_tuple[1])
-            # update edge of new face
-            newf = set_edge(curr_face, edge_tuple[1], temp_edge)
-            # Update face
-            updated_faces[edge_tuple[0]] = newf
-            # print(updated_faces)
+# if s.size==3:
+    for i in range(4):
+
+        edge_tuple = edge_set[i]
+        previous_tuple = edge_set[(i-direction) % 4]
+        # grab current face we are looking at
+        curr_face = s.d[edge_tuple[0]]
+        # grab previous face
+        prev_face = s.d[previous_tuple[0]]
+        # grab edge of previous face
+        temp_edge = get_edge(prev_face, previous_tuple[1])
+        # update edge of new face
+        newf = set_edge(curr_face, edge_tuple[1], temp_edge)
+        # Update face
+        updated_faces[edge_tuple[0]] = newf
+        # print(updated_faces)
             
     # else:
-    #     if direction == 1:
-    #         updated_faces = {edge_set[0][0]: s.d[edge_set[1][0]], edge_set[1][0]: s.d[edge_set[2][0]],
-    #                          edge_set[2][0]: s.d[edge_set[3][0]], edge_set[3][0]: s.d[edge_set[0][0]]}
+    #     if direction==1:
+    #         updated_faces={edge_set[0][0]: s.d[edge_set[1][0]], edge_set[1][0]: s.d[edge_set[2][0]], edge_set[2][0]: s.d[edge_set[3][0]], edge_set[3][0]: s.d[edge_set[0][0]]}
     #     else:
-    #         updated_faces = {edge_set[0][0]: s.d[edge_set[3][0]], edge_set[1][0]: s.d[edge_set[0][0]],
-    #                          edge_set[2][0]: s.d[edge_set[1][0]], edge_set[3][0]: s.d[edge_set[2][0]]}
-
-    else:
-        if direction == -1:
-            updated_faces = {edge_set[0][0]: [s.d[edge_set[0][0]][0], s.d[edge_set[1][0]][0]],
-                             edge_set[1][0]: [s.d[edge_set[1][0]][0], s.d[edge_set[2][0]][0]],
-                             edge_set[2][0]: [s.d[edge_set[2][0]][0], s.d[edge_set[3][0]][0]],
-                             edge_set[3][0]: [s.d[edge_set[3][0]][0], s.d[edge_set[0][0]][0]]}
-        else:
-            updated_faces = {edge_set[0][0]: [s.d[edge_set[0][0]][0], s.d[edge_set[3][0]][0]],
-                             edge_set[1][0]: [s.d[edge_set[1][0]][0], s.d[edge_set[0][0]][0]],
-                             edge_set[2][0]: [s.d[edge_set[2][0]][0], s.d[edge_set[1][0]][0]],
-                             edge_set[3][0]: [s.d[edge_set[3][0]][0], s.d[edge_set[2][0]][0]]}
-
+    #         updated_faces={edge_set[0][0]: s.d[edge_set[3][0]], edge_set[1][0]: s.d[edge_set[0][0]], edge_set[2][0]: s.d[edge_set[1][0]], edge_set[3][0]: s.d[edge_set[2][0]]}
+    
     return updated_faces
 
 
@@ -256,44 +339,79 @@ edge_rotation = {0: [(1, 0), (5, 0), (4, 0), (2, 0)], 1: [(0, 3), (2, 3), (3, 3)
 
 
 def get_edge(face, edge):
-    if edge == 2:
-        return face[edge]
-    # Bottom edge is reversed because we want the values in clockwise order.
-    # on the bottom this means they should be in order from right to left
-    elif edge == 0:
-        return list(reversed(face[edge]))
+    if len(face) == 3:
+        if edge == 2:
+            return face[edge]
+        # Bottom edge is reversed because we want the values in clockwise order.
+        # on the bottom this means they should be in order from right to left
+        elif edge == 0:
+            return list(reversed(face[edge]))
+        else:
+            edge_list = []
+            # j is the index within the row. (edge + 1) % 3 means edge 1 -> index 2
+            # edge 3 -> index 0
+            j = (edge + 1) % 4
+            l_ = range(3)
+            if edge == 1:
+                l_ = reversed(l_)
+            for i in l_:
+                edge_list.append(face[i][j])
+            return edge_list
+
     else:
-        edge_list = []
-        # j is the index within the row. (edge + 1) % 3 means edge 1 -> index 2
-        # edge 3 -> index 0
-        j = (edge + 1) % 4
-        l_ = range(3)
-        if edge == 1:
-            l_ = reversed(l_)
-        for i in l_:
-            edge_list.append(face[i][j])
-        return edge_list
+        if edge==0:
+            return list(reversed(face[0]))
+        elif edge==2:
+            return face[1]
+        elif edge==3:
+            edge_list = []
+            for i in range(2):
+                edge_list.append(face[i][0])
+            return edge_list
+        else:
+            edge_list = []
+            for i in reversed(range(2)):
+                edge_list.append(face[i][1])
+            return edge_list
 
 
 def set_edge(face, edge, new_edge):
-    newf = copy_face(face)
-    if edge == 2: 
-        newf[edge] = new_edge
-    elif edge == 0:
-        newf[edge] = list(reversed(new_edge))
+    if len(face) == 3:
+        newf = copy_face(face)
+        if edge == 2:
+            newf[edge] = new_edge
+        elif edge == 0:
+            newf[edge] = list(reversed(new_edge))
+        else:
+            edge_list = []
+            # j is the index within the row. (edge + 1) % 3 means edge 1 -> index 2
+            # edge 3 -> index 0
+            j = (edge + 1) % 4
+            l_ = range(3)
+            n = 0
+            # Reverse row index if edge = 3
+            if edge == 1:
+                l_ = reversed(l_)
+            for i in l_:
+                newf[i][j] = new_edge[n]
+                n += 1
+
     else:
-        edge_list = []
-        # j is the index within the row. (edge + 1) % 3 means edge 1 -> index 2
-        # edge 3 -> index 0
-        j = (edge + 1) % 4
-        l_ = range(3)
-        n = 0
-        # Reverse row index if edge = 3
-        if edge == 1:
-            l_ = reversed(l_)
-        for i in l_:
-            newf[i][j] = new_edge[n]
-            n += 1
+        newf = copy_face(face)
+        if edge == 2:
+            newf[1] = new_edge
+        elif edge == 0:
+            newf[0] = list(reversed(new_edge))
+        elif edge == 3:
+            n = 0
+            for i in range(2):
+                newf[i][0] = new_edge[n]
+                n += 1
+        else:
+            n = 0
+            for i in reversed(range(2)):
+                newf[i][1] = new_edge[n]
+                n += 1
     
     return newf
     
@@ -417,7 +535,7 @@ def reward(state=None, size=2, cost=0.0):
         return 0.0
 
     if size == 2:
-        if state.d == GOAL_STATE_TWO:
+        if state.d in GOAL_STATES_TWO:
             return 1.0
         else:
             return 0.0
@@ -430,15 +548,28 @@ def reward(state=None, size=2, cost=0.0):
 
     else:
         return cost
+    
 
-
-# testcube = State(GOAL_STATE_TWO)
-# print(testcube)
-# testcube = move(testcube, 3, -1)
-# print(testcube)
-# testcube = move(testcube, 2, 1)
-# print(testcube)
-# testcube = move(testcube, 4, -1)
-# print(testcube)
-# testcube = move(testcube, 5, 1)
-# print(testcube)
+# t = State(GOAL_STATE_THREE)
+# print(t)
+# t = move(t, 0, 1)
+# print(t)
+# t = move(t, 3, -1)
+# print(t)
+# t = move(t, 2, 1)
+# print(t)
+# t = move(t, 4, -1)
+# print(t)
+# t = move(t, 5, 1)
+# print(t)
+# t = move(t, 0, 1)
+# print(t)
+# t = move(t, 3, -1)
+# print(t)
+# t = move(t, 2, 1)
+# print(t)
+# t = move(t, 4, -1)
+# print(t)
+# t = move(t, 5, 1)
+# print(t)
+# START_STATE = t
